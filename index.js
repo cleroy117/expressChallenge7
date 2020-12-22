@@ -85,8 +85,8 @@ app.put("/api/users/:id", userValidationMiddlewares, (req, res) => {
     return res.status(422).json({ err: errors.array() });
   }
   return connection.query(
-    `UPDATE user2 SET ? WHERE id = ${req.params.id}`,
-    req.body,
+    "UPDATE user2 SET ? WHERE id = ?",
+    [req.body, req.params.id],
     (err, results) => {
       if (err) {
         return res.status(500).json({
@@ -97,7 +97,7 @@ app.put("/api/users/:id", userValidationMiddlewares, (req, res) => {
       console.log(results);
       return connection.query(
         "SELECT * FROM user2 WHERE id = ?",
-        results.insertId,
+        req.params.id,
         (err2, results2) => {
           if (err2) {
             return res.status(500).json({
